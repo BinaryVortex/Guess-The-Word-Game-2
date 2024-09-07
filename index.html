@@ -28,26 +28,26 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Dark overlay with 40% opacity */
-            z-index: 1; /* Ensure it sits above the background image */
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
 
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
             color: #333;
-            position: relative; /* Make sure container sits above the overlay */
-            z-index: 2; /* Ensure it sits above the overlay */
+            position: relative;
+            z-index: 2;
         }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
+            font-size: 30px;
             color: #333;
             letter-spacing: 1px;
             margin-bottom: 20px;
@@ -57,20 +57,21 @@
             display: flex;
             justify-content: center;
             margin: 20px 0;
-            gap: 10px; /* Add some spacing between boxes */
+            gap: 8px;
         }
 
         .inputs .letter-box {
             width: 50px;
             height: 50px;
             border: 2px solid #333;
-            background-color: #f2f2f2;
+            background-color: #fafafa;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 24px;
             font-weight: bold;
-            border-radius: 10px;
+            border-radius: 12px;
+            color: #333;
         }
 
         .stats {
@@ -82,7 +83,7 @@
             padding: 12px 25px;
             background-color: #007bff;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             color: #fff;
             font-size: 18px;
@@ -101,24 +102,59 @@
             margin-top: 10px;
             opacity: 0;
             transition: opacity 0.5s ease;
-            background: rgba(255, 255, 0, 0.8); /* Semi-transparent yellow background */
+            background: rgba(255, 255, 0, 0.9);
             padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.6); /* More prominent shadow */
-            display: inline-block; /* Adjust width to fit text */
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+            display: inline-block;
         }
 
         .hint.visible {
             opacity: 1;
         }
 
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px; /* Increased gap for mobile */
+            margin-top: 20px;
+            max-width: 100%;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .keyboard button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #e0e0e0;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+
+        .keyboard button:hover {
+            background: #d0d0d0;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4), -2px -2px 8px rgba(255, 255, 255, 0.9);
+            transform: scale(1.05);
+        }
+
+        .keyboard button:active {
+            background: #c0c0c0;
+            box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.3), inset -2px -2px 6px rgba(255, 255, 255, 0.7);
+        }
+
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 15px;
             }
 
             h1 {
-                font-size: 28px;
+                font-size: 24px;
             }
 
             .inputs .letter-box {
@@ -130,6 +166,17 @@
             .btn {
                 padding: 10px 20px;
                 font-size: 16px;
+            }
+
+            .keyboard {
+                grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); /* Responsive keyboard */
+                gap: 8px; /* Increased gap for mobile */
+            }
+
+            .keyboard button {
+                width: 36px;
+                height: 36px;
+                font-size: 12px;
             }
         }
     </style>
@@ -150,128 +197,307 @@
             <button class="btn showhint">Show Hint</button>
         </div>
         <p class="hint">Hint will appear here</p>
+        <div class="keyboard">
+            <!-- Dynamically generate the on-screen keyboard -->
+        </div>
     </div>
 
     <script>
         const wordList = [
-        { word: "apple", hint: "A fruit" },
-            { word: "car", hint: "A vehicle" },
-            { word: "house", hint: "A place to live" },
-            { word: "computer", hint: "A technology device" },
-            { word: "guitar", hint: "A musical instrument" },
-            { word: "skateboard", hint: "A board with wheels" },
-            { word: "pyramid", hint: "A ancient structure" },
-            { word: "jacket", hint: "A piece of clothing" },
-            { word: "elephant", hint: "A large mammal" },
-            { word: "bicycle", hint: "A two-wheeled vehicle" },
-            { word: "airplane", hint: "A flying vehicle" },
-            { word: "keyboard", hint: "A typing device" },
-            { word: "laptop", hint: "A portable computer" },
-            { word: "refrigerator", hint: "An appliance for cooling food" },
-            { word: "telephone", hint: "A communication device" },
-            { word: "microwave", hint: "A kitchen appliance for heating food" },
-            { word: "television", hint: "A device for watching shows" },
-            { word: "camera", hint: "A device for taking pictures" },
-            { word: "backpack", hint: "A bag carried on the back" },
-            { word: "umbrella", hint: "A device for protection from rain" },
-            { word: "sunglasses", hint: "Eyewear for sun protection" },
-            { word: "notebook", hint: "A book for writing notes" },
-            { word: "vacuum", hint: "A device for cleaning floors" },
-            { word: "bedroom", hint: "A room for sleeping" },
-            { word: "toaster", hint: "An appliance for toasting bread" },
-            { word: "pencil", hint: "A writing tool" },
-            { word: "exercise", hint: "Physical activity to keep fit" },
-            { word: "painting", hint: "Art created with colors" },
-            { word: "sculpture", hint: "Art created by carving or molding" },
-            { word: "telescope", hint: "An instrument for observing distant objects" },
-            { word: "calendar", hint: "A system for organizing days and months" },
-            { word: "carpet", hint: "A floor covering" },
-            { word: "furniture", hint: "Items used to furnish a room" },
-            { word: "paintbrush", hint: "A tool for applying paint" },
-            { word: "glasses", hint: "Eyewear for vision correction" },
-            { word: "mattress", hint: "A cushion for a bed" },
-            { word: "towel", hint: "A cloth used for drying" },
-            { word: "lamp", hint: "A device for lighting a room" },
-            { word: "drum", hint: "A musical instrument that is beaten" },
-            { word: "clock", hint: "A device for telling time" },
-            { word: "wrench", hint: "A tool for tightening or loosening bolts" },
-            { word: "hammer", hint: "A tool for pounding nails" },
-            { word: "brush", hint: "A tool for cleaning or painting" },
-            { word: "shoes", hint: "Footwear for protection and comfort" },
-            { word: "table", hint: "A piece of furniture with a flat top" },
-            { word: "chair", hint: "A seat with a backrest" },
-            { word: "dishwasher", hint: "An appliance for cleaning dishes" },
-            { word: "iron", hint: "A device for pressing clothes" },
-            { word: "fan", hint: "A device for circulating air" },
-            { word: "fridge", hint: "A refrigerator" },
-            { word: "stove", hint: "An appliance for cooking food" },
-            { word: "oven", hint: "An appliance for baking" },
-            { word: "mirror", hint: "A reflective surface" },
-            { word: "radio", hint: "A device for receiving broadcasts" },
-            { word: "tv", hint: "A television" },
-            { word: "printer", hint: "A device for printing documents" },
-            { word: "router", hint: "A device for networking" },
-            { word: "modem", hint: "A device for internet connectivity" },
-            { word: "shelf", hint: "A flat surface for storage" },
-            { word: "drawer", hint: "A sliding storage compartment" },
-            { word: "cabinet", hint: "A piece of furniture with shelves and doors" },
-            { word: "bin", hint: "A container for waste" },
-            { word: "pot", hint: "A container for cooking" },
-            { word: "pan", hint: "A cooking utensil with a flat bottom" },
-            { word: "cup", hint: "A small container for drinking" },
-            { word: "bowl", hint: "A round container for food" },
-            { word: "plate", hint: "A flat dish for serving food" },
-            { word: "spoon", hint: "A utensil for eating or serving" },
-            { word: "fork", hint: "A utensil with prongs for eating" },
-            { word: "knife", hint: "A utensil for cutting food" },
-            { word: "scissors", hint: "A tool for cutting" },
-            { word: "clip", hint: "A small fastening device" },
-            { word: "ruler", hint: "A tool for measuring" },
-            { word: "tape", hint: "A sticky strip used for fastening" },
-            { word: "stapler", hint: "A device for fastening papers" },
-            { word: "calculator", hint: "A device for performing calculations" },
-            { word: "notebook", hint: "A book for writing notes" },
-            { word: "pen", hint: "A writing instrument with ink" },
-            { word: "marker", hint: "A writing tool with a broad tip" },
-            { word: "chalk", hint: "A writing tool used on blackboards" },
-            { word: "eraser", hint: "A tool for removing pencil marks" },
-            { word: "sharpener", hint: "A tool for sharpening pencils" },
-            { word: "desk", hint: "A piece of furniture for working" },
-            { word: "lamp", hint: "A device for lighting a workspace" },
-            { word: "calendar", hint: "A system for organizing days" },
-            { word: "notepad", hint: "A small pad of paper for writing notes" },
-            { word: "planner", hint: "A book for organizing tasks and events" },
-            { word: "sticky notes", hint: "Small pieces of paper with an adhesive strip" },
-            { word: "paperclip", hint: "A small metal device for holding papers together" },
-            { word: "folder", hint: "A cover for holding papers" },
-            { word: "binder", hint: "A device for holding loose papers" },
-            { word: "portfolio", hint: "A collection of documents or artworks" },
-            { word: "file", hint: "A collection of related documents" },
-            { word: "envelope", hint: "A flat, usually rectangular, paper container for letters" },
-            { word: "post-it", hint: "A small piece of sticky paper for reminders" },
-            { word: "sticker", hint: "A piece of paper with adhesive for decoration" },
-            { word: "magnifying glass", hint: "An optical instrument for enlarging objects" },
-            { word: "microscope", hint: "An instrument for viewing small objects" },
-            { word: "telescope", hint: "An instrument for observing distant objects" },
-            { word: "binoculars", hint: "An optical instrument for viewing distant objects with both eyes" },
-            { word: "calculator", hint: "A device for performing mathematical calculations" },
-            { word: "alarm clock", hint: "A device for waking up" },
-            { word: "thermometer", hint: "An instrument for measuring temperature" },
-            { word: "barometer", hint: "An instrument for measuring atmospheric pressure" },
-            { word: "hygrometer", hint: "An instrument for measuring humidity" },
-            { word: "compass", hint: "An instrument for finding direction" },
-            { word: "watch", hint: "A timekeeping device worn on the wrist" },
-            { word: "calendar", hint: "A system for organizing days and months" },
-            { word: "clock", hint: "A device for telling time" },
-            { word: "thermometer", hint: "A device for measuring temperature" },
-            { word: "barometer", hint: "An instrument for measuring atmospheric pressure" },
-            { word: "hygrometer", hint: "A device for measuring humidity" },
-            { word: "compass", hint: "An instrument for finding direction" },
-            { word: "watch", hint: "A timekeeping device worn on the wrist" },
-            { word: "alarm", hint: "A device for alerting or warning" },
-            { word: "stopwatch", hint: "A device for measuring time intervals" },
-            { word: "thermostat", hint: "A device for regulating temperature" },
-            { word: "remote", hint: "A device for controlling electronic equipment from a distance" }
+        { word: "apple", hint: "A common fruit" },
+  { word: "grape", hint: "A small round fruit" },
+  { word: "lemon", hint: "A sour yellow fruit" },
+  { word: "peach", hint: "A sweet, juicy fruit" },
+  { word: "plumb", hint: "A dark purple fruit" },
+  { word: "mango", hint: "A tropical fruit" },
+  { word: "cherry", hint: "A small red fruit" },
+  { word: "orange", hint: "A citrus fruit" },
+  { word: "melon", hint: "A sweet, juicy fruit" },
+  { word: "berry", hint: "A small, juicy fruit" },
+  { word: "kiwi", hint: "A green, fuzzy fruit" },
+  { word: "dates", hint: "A sweet, chewy fruit" },
+  { word: "pears", hint: "A sweet fruit with a bell shape" },
+  { word: "plum", hint: "A juicy purple fruit" },
+  { word: "apricot", hint: "A small, orange fruit" },
+  { word: "mango", hint: "A tropical, orange fruit" },
+  { word: "quince", hint: "A hard, yellow fruit" },
+  { word: "figs", hint: "A sweet, purple fruit" },
+  { word: "coconut", hint: "A brown, hairy fruit" },
+  { word: "cabbage", hint: "A leafy green vegetable" },
+  { word: "onion", hint: "A pungent vegetable" },
+  { word: "carrot", hint: "An orange root vegetable" },
+  { word: "lettuce", hint: "A leafy green vegetable" },
+  { word: "celery", hint: "A crunchy green vegetable" },
+  { word: "beet", hint: "A red root vegetable" },
+  { word: "corn", hint: "A yellow grain on a cob" },
+  { word: "pepper", hint: "A spicy vegetable" },
+  { word: "radish", hint: "A small, spicy root" },
+  { word: "tomato", hint: "A red fruit used as a vegetable" },
+  { word: "garlic", hint: "A pungent, aromatic bulb" },
+  { word: "spinach", hint: "A leafy green vegetable" },
+  { word: "zucchini", hint: "A green summer squash" },
+  { word: "squash", hint: "A type of vegetable with a hard skin" },
+  { word: "okra", hint: "A green, edible pod" },
+  { word: "yams", hint: "A sweet, starchy root" },
+  { word: "cabbage", hint: "A leafy green vegetable" },
+  { word: "onions", hint: "A pungent vegetable" },
+  { word: "limes", hint: "A small green citrus fruit" },
+  { word: "tomato", hint: "A red fruit used as a vegetable" },
+  { word: "cucumbers", hint: "A green, crunchy vegetable" },
+  { word: "mushroom", hint: "A fungal growth used as a food" },
+  { word: "chili", hint: "A hot, spicy pepper" },
+  { word: "basil", hint: "An aromatic herb" },
+  { word: "rosemary", hint: "An herb used for seasoning" },
+  { word: "thyme", hint: "A fragrant herb" },
+  { word: "sage", hint: "An aromatic herb" },
+  { word: "tarragon", hint: "A flavorful herb" },
+  { word: "mint", hint: "A refreshing herb" },
+  { word: "dill", hint: "A herb with feathery leaves" },
+  { word: "parsley", hint: "A common green herb" },
+  { word: "coriander", hint: "An herb used in cooking" },
+  { word: "chive", hint: "A mild-flavored herb" },
+  { word: "basil", hint: "An aromatic herb" },
+  { word: "oregano", hint: "An herb used in Italian cooking" },
+  { word: "bay", hint: "A fragrant leaf used in cooking" },
+  { word: "mint", hint: "A refreshing herb" },
+  { word: "garlic", hint: "A pungent, aromatic bulb" },
+  { word: "onions", hint: "A pungent vegetable" },
+  { word: "pepper", hint: "A spicy vegetable" },
+  { word: "salt", hint: "A common seasoning" },
+  { word: "sugar", hint: "A sweet, crystalline substance" },
+  { word: "flour", hint: "A powder used in baking" },
+  { word: "yeast", hint: "A fungus used in baking" },
+  { word: "baking", hint: "A method of cooking with dry heat" },
+  { word: "cooking", hint: "The act of preparing food" },
+  { word: "frying", hint: "Cooking food in hot oil" },
+  { word: "grilling", hint: "Cooking food over an open flame" },
+  { word: "steaming", hint: "Cooking food with steam" },
+  { word: "boiling", hint: "Cooking food in boiling water" },
+  { word: "roasting", hint: "Cooking food with dry heat" },
+  { word: "broiling", hint: "Cooking food with high heat from above" },
+  { word: "poaching", hint: "Cooking food gently in liquid" },
+  { word: "simmering", hint: "Cooking food in liquid just below boiling" },
+  { word: "blending", hint: "Mixing ingredients together" },
+  { word: "whisking", hint: "Mixing with a whisk" },
+  { word: "kneading", hint: "Working dough with hands" },
+  { word: "rolling", hint: "Flattening dough with a rolling pin" },
+  { word: "shaping", hint: "Forming dough or food into a shape" },
+  { word: "cutting", hint: "Dividing food into pieces" },
+  { word: "chopping", hint: "Cutting food into small pieces" },
+  { word: "dicing", hint: "Cutting food into cubes" },
+  { word: "slicing", hint: "Cutting food into thin pieces" },
+  { word: "grating", hint: "Shredding food into small pieces" },
+  { word: "peeling", hint: "Removing the outer layer of food" },
+  { word: "searing", hint: "Quickly cooking food at high heat" },
+  { word: "marinating", hint: "Soaking food in a flavorful liquid" },
+  { word: "seasoning", hint: "Adding flavor to food" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "tasting", hint: "Sampling food to check flavor" },
+  { word: "serving", hint: "Placing food on plates for eating" },
+  { word: "presenting", hint: "Arranging food for display" },
+  { word: "plating", hint: "Arranging food on a plate" },
+  { word: "pouring", hint: "Releasing liquid from a container" },
+  { word: "baking", hint: "Cooking food in the oven" },
+  { word: "roasting", hint: "Cooking food with dry heat" },
+  { word: "cooking", hint: "Preparing food using heat" },
+  { word: "slicing", hint: "Cutting food into thin pieces" },
+  { word: "dicing", hint: "Cutting food into small cubes" },
+  { word: "grating", hint: "Shredding food into fine pieces" },
+  { word: "peeling", hint: "Removing the skin from food" },
+  { word: "kneading", hint: "Working dough with hands" },
+  { word: "whisking", hint: "Beating ingredients with a whisk" },
+  { word: "blending", hint: "Mixing ingredients thoroughly" },
+  { word: "chopping", hint: "Cutting food into small pieces" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "grilling", hint: "Cooking food over direct heat" },
+  { word: "frying", hint: "Cooking food in hot oil" },
+  { word: "boiling", hint: "Cooking food in boiling water" },
+  { word: "steaming", hint: "Cooking food with steam" },
+  { word: "simmering", hint: "Cooking food in liquid just below boiling" },
+  { word: "poaching", hint: "Cooking food gently in liquid" },
+  { word: "basting", hint: "Brushing food with its own juices" },
+  { word: "mashing", hint: "Squashing food until smooth" },
+  { word: "pounding", hint: "Flattening food with a mallet" },
+  { word: "grating", hint: "Shredding food into fine pieces" },
+  { word: "seasoning", hint: "Adding flavor to food" },
+  { word: "marinating", hint: "Soaking food in a flavorful liquid" },
+  { word: "tasting", hint: "Sampling food to check flavor" },
+  { word: "serving", hint: "Placing food on plates for eating" },
+  { word: "plating", hint: "Arranging food on a plate" },
+  { word: "pouring", hint: "Releasing liquid from a container" },
+  { word: "mixing", hint: "Combining ingredients together" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "whisking", hint: "Beating ingredients with a whisk" },
+  { word: "blending", hint: "Mixing ingredients thoroughly" },
+  { word: "kneading", hint: "Working dough with hands" },
+  { word: "rolling", hint: "Flattening dough with a rolling pin" },
+  { word: "shaping", hint: "Forming dough or food into a shape" },
+  { word: "cutting", hint: "Dividing food into pieces" },
+  { word: "chopping", hint: "Cutting food into small pieces" },
+  { word: "dicing", hint: "Cutting food into cubes" },
+  { word: "slicing", hint: "Cutting food into thin pieces" },
+  { word: "grating", hint: "Shredding food into small pieces" },
+  { word: "peeling", hint: "Removing the outer layer of food" },
+  { word: "searing", hint: "Quickly cooking food at high heat" },
+  { word: "marinating", hint: "Soaking food in a flavorful liquid" },
+  { word: "seasoning", hint: "Adding flavor to food" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "tasting", hint: "Sampling food to check flavor" },
+  { word: "serving", hint: "Placing food on plates for eating" },
+  { word: "presenting", hint: "Arranging food for display" },
+  { word: "plating", hint: "Arranging food on a plate" },
+  { word: "pouring", hint: "Releasing liquid from a container" },
+  { word: "baking", hint: "Cooking food in the oven" },
+  { word: "roasting", hint: "Cooking food with dry heat" },
+  { word: "cooking", hint: "Preparing food using heat" },
+  { word: "slicing", hint: "Cutting food into thin pieces" },
+  { word: "dicing", hint: "Cutting food into small cubes" },
+  { word: "grating", hint: "Shredding food into fine pieces" },
+  { word: "peeling", hint: "Removing the skin from food" },
+  { word: "kneading", hint: "Working dough with hands" },
+  { word: "whisking", hint: "Beating ingredients with a whisk" },
+  { word: "blending", hint: "Mixing ingredients thoroughly" },
+  { word: "chopping", hint: "Cutting food into small pieces" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "grilling", hint: "Cooking food over direct heat" },
+  { word: "frying", hint: "Cooking food in hot oil" },
+  { word: "boiling", hint: "Cooking food in boiling water" },
+  { word: "steaming", hint: "Cooking food with steam" },
+  { word: "simmering", hint: "Cooking food in liquid just below boiling" },
+  { word: "poaching", hint: "Cooking food gently in liquid" },
+  { word: "basting", hint: "Brushing food with its own juices" },
+  { word: "mashing", hint: "Squashing food until smooth" },
+  { word: "pounding", hint: "Flattening food with a mallet" },
+  { word: "grating", hint: "Shredding food into fine pieces" },
+  { word: "seasoning", hint: "Adding flavor to food" },
+  { word: "marinating", hint: "Soaking food in a flavorful liquid" },
+  { word: "tasting", hint: "Sampling food to check flavor" },
+  { word: "serving", hint: "Placing food on plates for eating" },
+  { word: "plating", hint: "Arranging food on a plate" },
+  { word: "pouring", hint: "Releasing liquid from a container" },
+  { word: "mixing", hint: "Combining ingredients together" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "whisking", hint: "Beating ingredients with a whisk" },
+  { word: "blending", hint: "Mixing ingredients thoroughly" },
+  { word: "kneading", hint: "Working dough with hands" },
+  { word: "rolling", hint: "Flattening dough with a rolling pin" },
+  { word: "shaping", hint: "Forming dough or food into a shape" },
+  { word: "cutting", hint: "Dividing food into pieces" },
+  { word: "chopping", hint: "Cutting food into small pieces" },
+  { word: "dicing", hint: "Cutting food into cubes" },
+  { word: "slicing", hint: "Cutting food into thin pieces" },
+  { word: "grating", hint: "Shredding food into small pieces" },
+  { word: "peeling", hint: "Removing the outer layer of food" },
+  { word: "searing", hint: "Quickly cooking food at high heat" },
+  { word: "marinating", hint: "Soaking food in a flavorful liquid" },
+  { word: "seasoning", hint: "Adding flavor to food" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "tasting", hint: "Sampling food to check flavor" },
+  { word: "serving", hint: "Placing food on plates for eating" },
+  { word: "presenting", hint: "Arranging food for display" },
+  { word: "plating", hint: "Arranging food on a plate" },
+  { word: "pouring", hint: "Releasing liquid from a container" },
+  { word: "mango", hint: "A tropical fruit" },
+  { word: "peach", hint: "A sweet, juicy fruit" },
+  { word: "plumb", hint: "A dark purple fruit" },
+  { word: "dates", hint: "A sweet, chewy fruit" },
+  { word: "kiwi", hint: "A green, fuzzy fruit" },
+  { word: "berry", hint: "A small, juicy fruit" },
+  { word: "figs", hint: "A sweet, purple fruit" },
+  { word: "coconut", hint: "A brown, hairy fruit" },
+  { word: "cabbage", hint: "A leafy green vegetable" },
+  { word: "onion", hint: "A pungent vegetable" },
+  { word: "carrot", hint: "An orange root vegetable" },
+  { word: "lettuce", hint: "A leafy green vegetable" },
+  { word: "celery", hint: "A crunchy green vegetable" },
+  { word: "beet", hint: "A red root vegetable" },
+  { word: "corn", hint: "A yellow grain on a cob" },
+  { word: "pepper", hint: "A spicy vegetable" },
+  { word: "radish", hint: "A small, spicy root" },
+  { word: "tomato", hint: "A red fruit used as a vegetable" },
+  { word: "garlic", hint: "A pungent, aromatic bulb" },
+  { word: "spinach", hint: "A leafy green vegetable" },
+  { word: "zucchini", hint: "A green summer squash" },
+  { word: "okra", hint: "A green, edible pod" },
+  { word: "yams", hint: "A sweet, starchy root" },
+  { word: "lemon", hint: "A sour yellow fruit" },
+  { word: "melon", hint: "A sweet, juicy fruit" },
+  { word: "plum", hint: "A juicy purple fruit" },
+  { word: "mango", hint: "A tropical, orange fruit" },
+  { word: "figs", hint: "A sweet, chewy fruit" },
+  { word: "coconut", hint: "A brown, hairy fruit" },
+  { word: "carrot", hint: "An orange root vegetable" },
+  { word: "celery", hint: "A crunchy green vegetable" },
+  { word: "beet", hint: "A red root vegetable" },
+  { word: "corn", hint: "A yellow grain on a cob" },
+  { word: "pepper", hint: "A spicy vegetable" },
+  { word: "radish", hint: "A small, spicy root" },
+  { word: "tomato", hint: "A red fruit used as a vegetable" },
+  { word: "garlic", hint: "A pungent, aromatic bulb" },
+  { word: "spinach", hint: "A leafy green vegetable" },
+  { word: "zucchini", hint: "A green summer squash" },
+  { word: "okra", hint: "A green, edible pod" },
+  { word: "yams", hint: "A sweet, starchy root" },
+  { word: "pears", hint: "A sweet fruit with a bell shape" },
+  { word: "apricot", hint: "A small, orange fruit" },
+  { word: "quince", hint: "A hard, yellow fruit" },
+  { word: "cabbage", hint: "A leafy green vegetable" },
+  { word: "onions", hint: "A pungent vegetable" },
+  { word: "limes", hint: "A small green citrus fruit" },
+  { word: "tomato", hint: "A red fruit used as a vegetable" },
+  { word: "cucumbers", hint: "A green, crunchy vegetable" },
+  { word: "mushroom", hint: "A fungal growth used as a food" },
+  { word: "chili", hint: "A hot, spicy pepper" },
+  { word: "basil", hint: "An aromatic herb" },
+  { word: "rosemary", hint: "An herb used for seasoning" },
+  { word: "thyme", hint: "A fragrant herb" },
+  { word: "sage", hint: "An aromatic herb" },
+  { word: "tarragon", hint: "A flavorful herb" },
+  { word: "mint", hint: "A refreshing herb" },
+  { word: "dill", hint: "A herb with feathery leaves" },
+  { word: "parsley", hint: "A common green herb" },
+  { word: "coriander", hint: "An herb used in cooking" },
+  { word: "chive", hint: "A mild-flavored herb" },
+  { word: "oregano", hint: "An herb used in Italian cooking" },
+  { word: "bay", hint: "A fragrant leaf used in cooking" },
+  { word: "mint", hint: "A refreshing herb" },
+  { word: "garlic", hint: "A pungent, aromatic bulb" },
+  { word: "onions", hint: "A pungent vegetable" },
+  { word: "pepper", hint: "A spicy vegetable" },
+  { word: "salt", hint: "A common seasoning" },
+  { word: "sugar", hint: "A sweet, crystalline substance" },
+  { word: "flour", hint: "A powder used in baking" },
+  { word: "yeast", hint: "A fungus used in baking" },
+  { word: "baking", hint: "A method of cooking with dry heat" },
+  { word: "cooking", hint: "The act of preparing food" },
+  { word: "frying", hint: "Cooking food in hot oil" },
+  { word: "grilling", hint: "Cooking food over an open flame" },
+  { word: "steaming", hint: "Cooking food with steam" },
+  { word: "boiling", hint: "Cooking food in boiling water" },
+  { word: "roasting", hint: "Cooking food with dry heat" },
+  { word: "broiling", hint: "Cooking food with high heat from above" },
+  { word: "poaching", hint: "Cooking food gently in liquid" },
+  { word: "simmering", hint: "Cooking food in liquid just below boiling" },
+  { word: "blending", hint: "Mixing ingredients together" },
+  { word: "whisking", hint: "Mixing with a whisk" },
+  { word: "kneading", hint: "Working dough with hands" },
+  { word: "rolling", hint: "Flattening dough with a rolling pin" },
+  { word: "shaping", hint: "Forming dough or food into a shape" },
+  { word: "cutting", hint: "Dividing food into pieces" },
+  { word: "chopping", hint: "Cutting food into small pieces" },
+  { word: "dicing", hint: "Cutting food into cubes" },
+  { word: "slicing", hint: "Cutting food into thin pieces" },
+  { word: "grating", hint: "Shredding food into small pieces" },
+  { word: "peeling", hint: "Removing the outer layer of food" },
+  { word: "searing", hint: "Quickly cooking food at high heat" },
+  { word: "marinating", hint: "Soaking food in a flavorful liquid" },
+  { word: "seasoning", hint: "Adding flavor to food" },
+  { word: "stirring", hint: "Mixing ingredients with a spoon" },
+  { word: "tasting", hint: "Sampling food to check flavor" },
+  { word: "serving", hint: "Placing food on plates for eating" },
+  { word: "presenting", hint: "Arranging food for display" },
+  { word: "plating", hint: "Arranging food on a plate" },
+  { word: "pouring", hint: "Releasing liquid from a container" }
         ];
 
         const inputs = document.querySelector(".word"),
@@ -279,7 +505,8 @@
             mistakes = document.querySelector(".wrong"),
             resetBtn = document.querySelector(".reset"),
             showHintBtn = document.querySelector(".showhint"),
-            hintDisplay = document.querySelector(".hint");
+            hintDisplay = document.querySelector(".hint"),
+            keyboard = document.querySelector(".keyboard");
 
         let word, incorrectLetters = [], correctLetters = [], maxGuesses;
 
@@ -291,8 +518,6 @@
             correctLetters = [];
             guessLeft.innerText = maxGuesses;
             mistakes.innerText = 0;
-            hintDisplay.innerText = "";
-            hintDisplay.classList.remove("visible");
 
             inputs.innerHTML = "";
             word.split("").forEach(() => {
@@ -300,21 +525,25 @@
                 letterBox.classList.add("letter-box");
                 inputs.appendChild(letterBox);
             });
+
+            hintDisplay.innerText = "Hint will appear here";
+            hintDisplay.classList.remove("visible");
+
+            generateKeyboard();
         }
 
-        function handleInput(e) {
-            const key = e.key.toLowerCase();
-            if (key.match(/^[a-z]$/) && !incorrectLetters.includes(key) && !correctLetters.includes(key)) {
-                if (word.includes(key)) {
+        function handleInput(letter) {
+            if (letter.match(/^[a-z]$/) && !incorrectLetters.includes(letter) && !correctLetters.includes(letter)) {
+                if (word.includes(letter)) {
                     for (let i = 0; i < word.length; i++) {
-                        if (word[i] === key) {
-                            inputs.querySelectorAll(".letter-box")[i].innerText = key;
+                        if (word[i] === letter) {
+                            inputs.querySelectorAll(".letter-box")[i].innerText = letter;
                         }
                     }
-                    correctLetters.push(key);
+                    correctLetters.push(letter);
                 } else {
                     maxGuesses--;
-                    incorrectLetters.push(key);
+                    incorrectLetters.push(letter);
                     mistakes.innerText = incorrectLetters.length;
                 }
 
@@ -332,14 +561,25 @@
             }
         }
 
-        resetBtn.addEventListener("click", startNewGame);
-        document.addEventListener("keydown", handleInput);
+        function generateKeyboard() {
+            keyboard.innerHTML = "";
+            const letters = "abcdefghijklmnopqrstuvwxyz".split("");
+            letters.forEach(letter => {
+                const button = document.createElement("button");
+                button.innerText = letter;
+                button.addEventListener("click", () => handleInput(letter));
+                keyboard.appendChild(button);
+            });
+        }
 
-        showHintBtn.addEventListener("click", () => {
-            const ranWord = wordList.find(item => item.word === word);
-            hintDisplay.innerText = ranWord.hint;
+        function showHint() {
+            const hint = wordList.find(w => w.word === word).hint;
+            hintDisplay.innerText = hint;
             hintDisplay.classList.add("visible");
-        });
+        }
+
+        resetBtn.addEventListener("click", startNewGame);
+        showHintBtn.addEventListener("click", showHint);
 
         startNewGame();
     </script>
