@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Word - Enhanced UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background-image: url('5331570.jpg');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            color: #fff;
+            position: relative;
+        }
+
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Dark overlay with 40% opacity */
+            z-index: 1; /* Ensure it sits above the background image */
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            color: #333;
+            position: relative; /* Make sure container sits above the overlay */
+            z-index: 2; /* Ensure it sits above the overlay */
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            color: #333;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .inputs {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px; /* Add some spacing between boxes */
+        }
+
+        .inputs .letter-box {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #333;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+
+        .stats {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 18px;
+            margin: 10px;
+            transition: background-color 0.3s, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .hint {
+            font-size: 18px;
+            color: #000;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background: rgba(255, 255, 0, 0.8); /* Semi-transparent yellow background */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.6); /* More prominent shadow */
+            display: inline-block; /* Adjust width to fit text */
+        }
+
+        .hint.visible {
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .inputs .letter-box {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <div class="container">
+        <h1>Guess Word Game</h1>
+        <div class="inputs word">
+            <!-- Dynamically generate the square boxes for each letter of the word -->
+        </div>
+        <div class="stats">
+            <p>Guesses: <span class="guess">8</span></p>
+            <p>Mistakes: <span class="wrong">0</span></p>
+        </div>
+        <div>
+            <button class="btn reset">Reset Game</button>
+            <button class="btn showhint">Show Hint</button>
+        </div>
+        <p class="hint">Hint will appear here</p>
+    </div>
+
+    <script>
+        const wordList = [
+        { word: "apple", hint: "A fruit" },
+            { word: "car", hint: "A vehicle" },
+            { word: "house", hint: "A place to live" },
+            { word: "computer", hint: "A technology device" },
+            { word: "guitar", hint: "A musical instrument" },
+            { word: "skateboard", hint: "A board with wheels" },
+            { word: "pyramid", hint: "A ancient structure" },
+            { word: "jacket", hint: "A piece of clothing" },
+            { word: "elephant", hint: "A large mammal" },
+            { word: "bicycle", hint: "A two-wheeled vehicle" },
+            { word: "airplane", hint: "A flying vehicle" },
+            { word: "keyboard", hint: "A typing device" },
+            { word: "laptop", hint: "A portable computer" },
+            { word: "refrigerator", hint: "An appliance for cooling food" },
+            { word: "telephone", hint: "A communication device" },
+            { word: "microwave", hint: "A kitchen appliance for heating food" },
+            { word: "television", hint: "A device for watching shows" },
+            { word: "camera", hint: "A device for taking pictures" },
+            { word: "backpack", hint: "A bag carried on the back" },
+            { word: "umbrella", hint: "A device for protection from rain" },
+            { word: "sunglasses", hint: "Eyewear for sun protection" },
+            { word: "notebook", hint: "A book for writing notes" },
+            { word: "vacuum", hint: "A device for cleaning floors" },
+            { word: "bedroom", hint: "A room for sleeping" },
+            { word: "toaster", hint: "An appliance for toasting bread" },
+            { word: "pencil", hint: "A writing tool" },
+            { word: "exercise", hint: "Physical activity to keep fit" },
+            { word: "painting", hint: "Art created with colors" },
+            { word: "sculpture", hint: "Art created by carving or molding" },
+            { word: "telescope", hint: "An instrument for observing distant objects" },
+            { word: "calendar", hint: "A system for organizing days and months" },
+            { word: "carpet", hint: "A floor covering" },
+            { word: "furniture", hint: "Items used to furnish a room" },
+            { word: "paintbrush", hint: "A tool for applying paint" },
+            { word: "glasses", hint: "Eyewear for vision correction" },
+            { word: "mattress", hint: "A cushion for a bed" },
+            { word: "towel", hint: "A cloth used for drying" },
+            { word: "lamp", hint: "A device for lighting a room" },
+            { word: "drum", hint: "A musical instrument that is beaten" },
+            { word: "clock", hint: "A device for telling time" },
+            { word: "wrench", hint: "A tool for tightening or loosening bolts" },
+            { word: "hammer", hint: "A tool for pounding nails" },
+            { word: "brush", hint: "A tool for cleaning or painting" },
+            { word: "shoes", hint: "Footwear for protection and comfort" },
+            { word: "table", hint: "A piece of furniture with a flat top" },
+            { word: "chair", hint: "A seat with a backrest" },
+            { word: "dishwasher", hint: "An appliance for cleaning dishes" },
+            { word: "iron", hint: "A device for pressing clothes" },
+            { word: "fan", hint: "A device for circulating air" },
+            { word: "fridge", hint: "A refrigerator" },
+            { word: "stove", hint: "An appliance for cooking food" },
+            { word: "oven", hint: "An appliance for baking" },
+            { word: "mirror", hint: "A reflective surface" },
+            { word: "radio", hint: "A device for receiving broadcasts" },
+            { word: "tv", hint: "A television" },
+            { word: "printer", hint: "A device for printing documents" },
+            { word: "router", hint: "A device for networking" },
+            { word: "modem", hint: "A device for internet connectivity" },
+            { word: "shelf", hint: "A flat surface for storage" },
+            { word: "drawer", hint: "A sliding storage compartment" },
+            { word: "cabinet", hint: "A piece of furniture with shelves and doors" },
+            { word: "bin", hint: "A container for waste" },
+            { word: "pot", hint: "A container for cooking" },
+            { word: "pan", hint: "A cooking utensil with a flat bottom" },
+            { word: "cup", hint: "A small container for drinking" },
+            { word: "bowl", hint: "A round container for food" },
+            { word: "plate", hint: "A flat dish for serving food" },
+            { word: "spoon", hint: "A utensil for eating or serving" },
+            { word: "fork", hint: "A utensil with prongs for eating" },
+            { word: "knife", hint: "A utensil for cutting food" },
+            { word: "scissors", hint: "A tool for cutting" },
+            { word: "clip", hint: "A small fastening device" },
+            { word: "ruler", hint: "A tool for measuring" },
+            { word: "tape", hint: "A sticky strip used for fastening" },
+            { word: "stapler", hint: "A device for fastening papers" },
+            { word: "calculator", hint: "A device for performing calculations" },
+            { word: "notebook", hint: "A book for writing notes" },
+            { word: "pen", hint: "A writing instrument with ink" },
+            { word: "marker", hint: "A writing tool with a broad tip" },
+            { word: "chalk", hint: "A writing tool used on blackboards" },
+            { word: "eraser", hint: "A tool for removing pencil marks" },
+            { word: "sharpener", hint: "A tool for sharpening pencils" },
+            { word: "desk", hint: "A piece of furniture for working" },
+            { word: "lamp", hint: "A device for lighting a workspace" },
+            { word: "calendar", hint: "A system for organizing days" },
+            { word: "notepad", hint: "A small pad of paper for writing notes" },
+            { word: "planner", hint: "A book for organizing tasks and events" },
+            { word: "sticky notes", hint: "Small pieces of paper with an adhesive strip" },
+            { word: "paperclip", hint: "A small metal device for holding papers together" },
+            { word: "folder", hint: "A cover for holding papers" },
+            { word: "binder", hint: "A device for holding loose papers" },
+            { word: "portfolio", hint: "A collection of documents or artworks" },
+            { word: "file", hint: "A collection of related documents" },
+            { word: "envelope", hint: "A flat, usually rectangular, paper container for letters" },
+            { word: "post-it", hint: "A small piece of sticky paper for reminders" },
+            { word: "sticker", hint: "A piece of paper with adhesive for decoration" },
+            { word: "magnifying glass", hint: "An optical instrument for enlarging objects" },
+            { word: "microscope", hint: "An instrument for viewing small objects" },
+            { word: "telescope", hint: "An instrument for observing distant objects" },
+            { word: "binoculars", hint: "An optical instrument for viewing distant objects with both eyes" },
+            { word: "calculator", hint: "A device for performing mathematical calculations" },
+            { word: "alarm clock", hint: "A device for waking up" },
+            { word: "thermometer", hint: "An instrument for measuring temperature" },
+            { word: "barometer", hint: "An instrument for measuring atmospheric pressure" },
+            { word: "hygrometer", hint: "An instrument for measuring humidity" },
+            { word: "compass", hint: "An instrument for finding direction" },
+            { word: "watch", hint: "A timekeeping device worn on the wrist" },
+            { word: "calendar", hint: "A system for organizing days and months" },
+            { word: "clock", hint: "A device for telling time" },
+            { word: "thermometer", hint: "A device for measuring temperature" },
+            { word: "barometer", hint: "An instrument for measuring atmospheric pressure" },
+            { word: "hygrometer", hint: "A device for measuring humidity" },
+            { word: "compass", hint: "An instrument for finding direction" },
+            { word: "watch", hint: "A timekeeping device worn on the wrist" },
+            { word: "alarm", hint: "A device for alerting or warning" },
+            { word: "stopwatch", hint: "A device for measuring time intervals" },
+            { word: "thermostat", hint: "A device for regulating temperature" },
+            { word: "remote", hint: "A device for controlling electronic equipment from a distance" }
+        ];
+
+        const inputs = document.querySelector(".word"),
+            guessLeft = document.querySelector(".guess"),
+            mistakes = document.querySelector(".wrong"),
+            resetBtn = document.querySelector(".reset"),
+            showHintBtn = document.querySelector(".showhint"),
+            hintDisplay = document.querySelector(".hint");
+
+        let word, incorrectLetters = [], correctLetters = [], maxGuesses;
+
+        function startNewGame() {
+            const ranWord = wordList[Math.floor(Math.random() * wordList.length)];
+            word = ranWord.word;
+            maxGuesses = word.length >= 5 ? 8 : 6;
+            incorrectLetters = [];
+            correctLetters = [];
+            guessLeft.innerText = maxGuesses;
+            mistakes.innerText = 0;
+            hintDisplay.innerText = "";
+            hintDisplay.classList.remove("visible");
+
+            inputs.innerHTML = "";
+            word.split("").forEach(() => {
+                const letterBox = document.createElement("div");
+                letterBox.classList.add("letter-box");
+                inputs.appendChild(letterBox);
+            });
+        }
+
+        function handleInput(e) {
+            const key = e.key.toLowerCase();
+            if (key.match(/^[a-z]$/) && !incorrectLetters.includes(key) && !correctLetters.includes(key)) {
+                if (word.includes(key)) {
+                    for (let i = 0; i < word.length; i++) {
+                        if (word[i] === key) {
+                            inputs.querySelectorAll(".letter-box")[i].innerText = key;
+                        }
+                    }
+                    correctLetters.push(key);
+                } else {
+                    maxGuesses--;
+                    incorrectLetters.push(key);
+                    mistakes.innerText = incorrectLetters.length;
+                }
+
+                guessLeft.innerText = maxGuesses;
+
+                if (correctLetters.length === word.length) {
+                    alert(`Congrats! You guessed the word: ${word.toUpperCase()}`);
+                    startNewGame();
+                } else if (maxGuesses < 1) {
+                    alert("Game Over! You've run out of guesses.");
+                    word.split("").forEach((letter, i) => {
+                        inputs.querySelectorAll(".letter-box")[i].innerText = letter;
+                    });
+                }
+            }
+        }
+
+        resetBtn.addEventListener("click", startNewGame);
+        document.addEventListener("keydown", handleInput);
+
+        showHintBtn.addEventListener("click", () => {
+            const ranWord = wordList.find(item => item.word === word);
+            hintDisplay.innerText = ranWord.hint;
+            hintDisplay.classList.add("visible");
+        });
+
+        startNewGame();
+    </script>
+</body>
+</html>
